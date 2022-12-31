@@ -1,10 +1,16 @@
 import fs from "node:fs/promises";
-import fssync from "node:fs"
+import fssync from "node:fs";
 import path from "node:path";
 
 import "dotenv/config";
 
 const authorization_token = process.env.AUTHORIZATION_TOKEN?.toString() || "";
+
+if (
+	!fssync.existsSync(path.join(process.cwd() + "/data/channels/"))
+) {
+	fs.mkdir(path.join(process.cwd() + "/data/channels/"));
+}
 
 async function main(guild_id: number | string) {
 	const guild_channels = await fetch(
@@ -28,7 +34,7 @@ async function main(guild_id: number | string) {
 				{
 					method: "GET",
 					headers: {
-                        authorization: authorization_token,
+						authorization: authorization_token,
 					},
 				},
 			);
@@ -47,9 +53,10 @@ async function main(guild_id: number | string) {
 				},
 			);
 
-			const parent_name = JSON.parse(
-				await guild_channel_fetch_parent_name.text(),
-			)["name"];
+			const parent_name =
+				JSON.parse(await guild_channel_fetch_parent_name.text())[
+					"name"
+				] || "";
 
 			const parent_name_replaced = parent_name
 				.replace("\\", "")

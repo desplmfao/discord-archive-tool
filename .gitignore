@@ -1,5 +1,5 @@
 build
 node_modules
-data
+data/channels/*
 package-*
 .env
