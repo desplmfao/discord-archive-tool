@@ -5,4 +5,4 @@ By using this project or its source code, for any purpose and in any shape or fo
 - **You support Ukraine's territorial integrity, including its claims over temporarily occupied territories of Crimea and Donbas**
 - **You reject false narratives perpetuated by Russian state propaganda**
 
-[to be clear I am referencing this](https://github.com/Tyrrrz/DiscordChatExporter/blob/master/Readme.md)
+[to be clear I am referencing this](https://github.com/Tyrrrz/DiscordChatExporter/blob/master/Readme.md#terms-of-use)
