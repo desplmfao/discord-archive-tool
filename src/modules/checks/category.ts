@@ -4,9 +4,8 @@ import path from "node:path";
 
 import { sanitize } from "../../global/sanitize";
 
-export default async (parent_name: string | undefined, channel: string[]) => {
+export default async (parent_name: string, channel: string[]) => {
     if (
-        parent_name !== undefined &&
         !fssync.existsSync(
             path.join(
                 process.cwd() +
@@ -24,3 +23,5 @@ export default async (parent_name: string | undefined, channel: string[]) => {
         );
     }
 }
+
+

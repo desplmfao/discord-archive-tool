@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-import { fetch_guild_messages_from_channel_id } from "./modules/fetch_guild_messages_from_channel_id";
+import { fetch_messages_from_channel_id } from "./modules/fetch_messages_from_channel_id";
 
 export const authorization_token = process.env.AUTHORIZATION_TOKEN?.toString() || "";
 
@@ -24,7 +24,7 @@ async function main(guild_id: number | string) {
 		index: number,
 	) {
 		await sleep(250 * (index + 1));
-		await fetch_guild_messages_from_channel_id(channel);
+		await fetch_messages_from_channel_id(channel);
 	});
 }
 

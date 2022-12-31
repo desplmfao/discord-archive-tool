@@ -3,7 +3,7 @@ import fssync from "node:fs";
 import path from "node:path";
 
 import { authorization_token } from "../index";
-import { fetch_attachments_from_message } from "../modules/fetch_attachments_from_message";
+import { fetch_attachments_from_message } from "./fetch_attachments_from_message";
 
 import { sanitize } from "../global/sanitize"
 
@@ -12,7 +12,7 @@ import check_category from "./checks/category"
 import check_channel_name from "./checks/channel_name"
 import check_channel_name_and_id from "./checks/channel_name_and_id"
 
-export async function fetch_guild_messages_from_channel_id(channel: string[]) {
+export async function fetch_messages_from_channel_id(channel: string[]) {
 	try {
 		if (!fssync.existsSync(path.join(process.cwd() + "/data/channels/"))) {
 			fs.mkdir(path.join(process.cwd() + "/data/channels/"));
@@ -64,7 +64,7 @@ export async function fetch_guild_messages_from_channel_id(channel: string[]) {
 			);
 
             if (process.env.GET_ATTACHMENTS) {
-                await fetch_attachments_from_message(parsed_messages);
+                await fetch_attachments_from_message(parent_name, parsed_messages, channel);
             }
 
 			write_file(
