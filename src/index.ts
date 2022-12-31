@@ -52,17 +52,10 @@ async function main(guild_id: number | string) {
 					},
 				},
 			);
-
-<<<<<<< HEAD
-			const parent_name =
-				JSON.parse(await guild_channel_fetch_parent_name.text())[
-					"name"
-				] || "";
-=======
+                
 			const parent_name = JSON.parse(
 				await guild_channel_fetch_parent_name.text(),
 			)["name"] || "";
->>>>>>> 5d0e978ba5a588735e85a551ff8367f977ec8eba
 
 			const parent_name_replaced = parent_name
 				.replace("\\", "")
