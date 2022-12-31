@@ -1,4 +1,5 @@
 [to be clear I am referencing this](https://github.com/Tyrrrz/DiscordChatExporter/blob/master/Readme.md#terms-of-use)
+
 By using this project or its source code, for any purpose and in any shape or form, you grant your implicit agreement to all the following statements:
 
 - **You condemn Russia and its military aggression against Ukraine**
