@@ -49,7 +49,7 @@ async function main(guild_id: number | string) {
 
 			const parent_name = JSON.parse(
 				await guild_channel_fetch_parent_name.text(),
-			)["name"];
+			)["name"] || "";
 
 			const parent_name_replaced = parent_name
 				.replace("\\", "")
