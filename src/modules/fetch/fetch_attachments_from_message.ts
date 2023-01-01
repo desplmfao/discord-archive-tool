@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { authorization_token } from "../../index";
+import { authorization_token, user_agent } from "../../index";
 
 import * as global from "../../global/index";
 import * as checks from "../index";
@@ -11,13 +11,28 @@ export default async (
 	channel: string[],
 ) => {
 	messages.forEach(async (message: any, index: number) => {
-		await global.sleep(5000 * (index + 1));
+		await global.sleep(10000 * (index + 1));
 
 		let names: object[] = [];
 
+		const fetch_url = async (message_attachments_array: string[]) => {
+			console.log(message_attachments_array["filename"])
+			let url: string = ""
+
+			if (message_attachments_array["size"] >= 8000000) {
+				url = message_attachments_array["url"]
+			}
+
+			if (message_attachments_array["size"] <= 8000000) {
+				url = message_attachments_array["proxy_url"]
+			}
+
+			return url
+		}
+
 		let messaged = message;
 		let id = message["id"] || "";
-		let url = JSON.parse(JSON.stringify(message["attachments"]))[0]["url"].toString();
+		let url = await fetch_url(JSON.parse(JSON.stringify(message["attachments"]))[0])
 		let array_url = url.toString().split("/");
 		let name = array_url.toString().split(/[, ]+/).pop()?.toString() || "";
 
@@ -32,8 +47,6 @@ export default async (
 
 		let done: string[] = [];
 
-		await global.sleep(2500 * (index + 1));
-
 		await checks.channel_name_and_id_message_attachment_id(
 			parent_name,
 			messaged,
@@ -45,11 +58,12 @@ export default async (
 			},
 		);
 
-		async function bruh(data: any) {			
+		async function bruh(data: any) {	
 			const arrayBuffer = (await (await fetch(await data.url, {
 				method: "GET",
 				headers: {
 					authorization: authorization_token,
+					"user-agent": user_agent
 				},
 			})).arrayBuffer());
 

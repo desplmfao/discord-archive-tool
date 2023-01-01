@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { authorization_token } from "../../index";
+import { authorization_token, user_agent } from "../../index";
 
 import * as global from "../../global/index"
 import * as checks from "../index"
@@ -17,6 +17,7 @@ export default async (
 				method: "GET",
 				headers: {
 					authorization: authorization_token,
+					"user-agent": user_agent
 				},
 			},
 		);
@@ -29,6 +30,7 @@ export default async (
 				method: "GET",
 				headers: {
 					authorization: authorization_token,
+					"user-agent": user_agent
 				},
 			},
 		);
@@ -46,6 +48,7 @@ export default async (
 					method: "GET",
 					headers: {
 						authorization: authorization_token,
+						"user-agent": user_agent
 					},
 				},
 			);
