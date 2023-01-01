@@ -16,15 +16,22 @@ export default async (
 		let names: object[] = [];
 
 		const fetch_url = async (message_attachments_array: string[]) => {
-			console.log(message_attachments_array["filename"])
+			const bruh = message_attachments_array || { size: 0, proxy_url: "", url: "" };
+
+			const asize = bruh["size"] || null
+			const apurl = bruh["proxy_url"] || null
+			const anurl = bruh["url"] || null
+
+			console.log(bruh)
+			
 			let url: string = ""
 
-			if (message_attachments_array["size"] >= 8000000) {
-				url = message_attachments_array["url"]
+			if (asize >= 8000000) {
+				url = anurl
 			}
 
-			if (message_attachments_array["size"] <= 8000000) {
-				url = message_attachments_array["proxy_url"]
+			if (asize <= 8000000) {
+				url = apurl
 			}
 
 			return url
@@ -35,6 +42,10 @@ export default async (
 		let url = await fetch_url(JSON.parse(JSON.stringify(message["attachments"]))[0])
 		let array_url = url.toString().split("/");
 		let name = array_url.toString().split(/[, ]+/).pop()?.toString() || "";
+
+		if (!url) {
+			return
+		}
 
 		names.push({
 			channel: channel,
@@ -58,31 +69,6 @@ export default async (
 			},
 		);
 
-		async function bruh(data: any) {	
-			const arrayBuffer = (await (await fetch(await data.url, {
-				method: "GET",
-				headers: {
-					authorization: authorization_token,
-					"user-agent": user_agent
-				},
-			})).arrayBuffer());
-
-			const buffer = Buffer.from(arrayBuffer);
-
-			await global.write_file(
-				path.join(
-					global.root,
-					await global.sanitize(parent_name), "/",
-					await global.sanitize(await data.channel["name"]), "/",
-					await global.sanitize(await data.channel["id"]), "/",
-					"attachments", "/",
-					await global.sanitize(data.id), "/",
-					await global.sanitize(data.name),
-				),
-				buffer,
-			);
-		}
-
 		await JSON.parse(JSON.stringify(names).toString()).forEach(
 			async function (data: any, index: number) {
 				console.log(data.url)
@@ -90,7 +76,28 @@ export default async (
 				console.log(done);
 
 				if (!(done.indexOf(await data.url) > -1)) {
-					await bruh(await data);
+					const arrayBuffer = (await (await fetch(await data.url, {
+						method: "GET",
+						headers: {
+							authorization: authorization_token,
+							"user-agent": user_agent
+						},
+					})).arrayBuffer());
+		
+					const buffer = Buffer.from(arrayBuffer);
+		
+					await global.write_file(
+						path.join(
+							global.root,
+							await global.sanitize(parent_name), "/",
+							await global.sanitize(await data.channel["name"]), "/",
+							await global.sanitize(await data.channel["id"]), "/",
+							"attachments", "/",
+							await global.sanitize(data.id), "/",
+							await global.sanitize(data.name),
+						),
+						buffer,
+					);
 				}
 			},
 		);
