@@ -1,17 +1,15 @@
 import path from "node:path";
 
-import { sanitize } from "../global/sanitize";
-import { authorization_token } from "../index";
+import { authorization_token } from "../../index";
 
-import write_file from "../global/write_file";
-import message_attachment from "./checks/channel_name_and_id_message_attachment";
-import message_attachment_id from "./checks/channel_name_and_id_message_attachment_id";
+import * as global from "../../global/index"
+import * as checks from "../index"
 
-export async function fetch_attachments_from_message(
+export default async (
 	parent_name: string,
 	messages: string[],
 	channel: string[],
-) {
+) => {
 	let id: string = "";
 	let url: string = "";
 	let array_url: string[] = [];
@@ -23,13 +21,8 @@ export async function fetch_attachments_from_message(
 		messages.forEach(async (message: any) => {
 			messaged = message;
 			id = message["id"] || "";
-			url = JSON.parse(JSON.stringify(message["attachments"]))[0][
-				"url"
-			].toString();
-			array_url = url
-				.toString()
-				//.replace("https://media.discordapp.com/attachments/", "")
-				.split("/");
+			url = JSON.parse(JSON.stringify(message["attachments"]))[0]["url"].toString();
+			array_url = url.toString().split("/");
 			name = array_url.toString().split(/[, ]+/).pop()?.toString() || "";
 
 			names.push({
@@ -43,7 +36,7 @@ export async function fetch_attachments_from_message(
 
 			let done: string[] = [];
 
-			await message_attachment_id(parent_name, messaged, {
+			await checks.channel_name_and_id_message_attachment_id(parent_name, messaged, {
 				id: id,
 				name: name,
 				root_id: await channel["id"],
@@ -64,20 +57,15 @@ export async function fetch_attachments_from_message(
 
 				const arrayBuffer = await response.arrayBuffer();
 				const buffer = Buffer.from(arrayBuffer);
-				await write_file(
+				await global.write_file(
 					path.join(
-						process.cwd() + "/data/channels/",
-						await sanitize(parent_name),
-						"/",
-						await sanitize(await data.channel["name"]),
-						"/",
-						await sanitize(await data.channel["id"]),
-						"/",
-						"attachments",
-						"/",
-						await sanitize(data.id),
-						"/",
-						await sanitize(data.name),
+						global.root,
+						await global.sanitize(parent_name), "/",
+						await global.sanitize(await data.channel["name"]), "/",
+						await global.sanitize(await data.channel["id"]), "/",
+						"attachments", "/",
+						await global.sanitize(data.id), "/",
+						await global.sanitize(data.name),
 					),
 					buffer,
 				);
@@ -85,13 +73,11 @@ export async function fetch_attachments_from_message(
 
 			await JSON.parse(JSON.stringify(names).toString()).forEach(
 				async function (data: any, index: number) {
-					//await sleep(1000 * (index + 1));
-                    
                     done.push(await data.id)
                     console.log(done)
+
 					if (!(done.indexOf(await data.url) > -1)) {
 						await sleep(1000 * (index + 1));
-						console.log("a");
 						await bruh(await data);
 					}
 				},
@@ -99,9 +85,7 @@ export async function fetch_attachments_from_message(
 		}),
 	);
 
-	await message_attachment(parent_name, messaged, {
-		id: id,
-		name: name,
+	await checks.channel_name_and_id_message_attachment(parent_name, {
 		root_id: await channel["id"],
 		root_name: await channel["name"],
 	});
