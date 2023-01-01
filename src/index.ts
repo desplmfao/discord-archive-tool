@@ -23,17 +23,17 @@ async function main(guild_id: number | string) {
 	) {
 		await global.sleep(250 * (index + 1));
 
-		/* const stuff =*/ (await modules.fetch_messages_from_channel_id(channel));
+		const stuff = (await modules.fetch_messages_from_channel_id(channel));
 
-		/*await global.sleep(250 * (index + 1));
+		await global.sleep(250 * (index + 1));
 
 		if (process.env.GET_ATTACHMENTS) {
 			await modules.fetch_attachments_from_message(
 				stuff?.parent_name,
-				stuff?.parsed_messages,
-				stuff?.channel,
+				stuff?.parsed_messages || [],
+				stuff?.channel || [],
 			);
-		}*/
+		}
 	});
 }
 
