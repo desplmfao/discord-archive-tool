@@ -10,14 +10,14 @@ export default async (
 	messages: string[],
 	channel: string[],
 ) => {
-	messages.forEach(async (message: any) => {
+	messages.forEach(async (message: any, index: number) => {
+		await global.sleep(5000 * (index + 1));
+
 		let names: object[] = [];
 
 		let messaged = message;
 		let id = message["id"] || "";
-		let url = JSON.parse(JSON.stringify(message["attachments"]))[0][
-			"url"
-		].toString();
+		let url = JSON.parse(JSON.stringify(message["attachments"]))[0]["url"].toString();
 		let array_url = url.toString().split("/");
 		let name = array_url.toString().split(/[, ]+/).pop()?.toString() || "";
 
@@ -32,6 +32,8 @@ export default async (
 
 		let done: string[] = [];
 
+		await global.sleep(2500 * (index + 1));
+
 		await checks.channel_name_and_id_message_attachment_id(
 			parent_name,
 			messaged,
@@ -43,20 +45,16 @@ export default async (
 			},
 		);
 
-		function sleep(ms: number | undefined) {
-			return new Promise((resolve) => setTimeout(resolve, ms));
-		}
-
-		async function bruh(data: any) {
-			const response = await fetch(await data.url, {
+		async function bruh(data: any) {			
+			const arrayBuffer = (await (await fetch(await data.url, {
 				method: "GET",
 				headers: {
 					authorization: authorization_token,
 				},
-			});
+			})).arrayBuffer());
 
-			const arrayBuffer = await response.arrayBuffer();
 			const buffer = Buffer.from(arrayBuffer);
+
 			await global.write_file(
 				path.join(
 					global.root,
@@ -78,7 +76,6 @@ export default async (
 				console.log(done);
 
 				if (!(done.indexOf(await data.url) > -1)) {
-					await sleep(1000 * (index + 1));
 					await bruh(await data);
 				}
 			},
