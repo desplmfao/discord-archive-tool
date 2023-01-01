@@ -18,6 +18,8 @@ export async function fetch_messages_from_channel_id(channel: string[]) {
 			fs.mkdir(path.join(process.cwd() + "/data/channels/"));
 		}
 
+		let parsed_messages: string[] = []
+
 		const guild_channel_fetch = await fetch(
 			`https://discord.com/api/v9/channels/${channel["id"]}`, // /messages?limit=100
 			{
@@ -59,13 +61,9 @@ export async function fetch_messages_from_channel_id(channel: string[]) {
 				},
 			);
 
-			const parsed_messages = JSON.parse(
+			parsed_messages = JSON.parse(
 				await guild_channel_fetch_messages.text(),
 			);
-
-            if (process.env.GET_ATTACHMENTS) {
-                await fetch_attachments_from_message(parent_name, parsed_messages, channel);
-            }
 
 			write_file(
 				path.join(
@@ -79,6 +77,12 @@ export async function fetch_messages_from_channel_id(channel: string[]) {
 				),
 				JSON.stringify(parsed_messages, null, 4),
 			);
+		}
+		
+		return {
+			parent_name: parent_name, 
+			parsed_messages: parsed_messages, 
+			channel: channel	
 		}
 	} catch (error) {
 		console.error(error);

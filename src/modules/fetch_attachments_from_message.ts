@@ -19,7 +19,7 @@ export async function fetch_attachments_from_message(
 	let messaged: string[] = [];
 	let names: object[] = [];
 
-	console.log(
+    console.log(
 		messages.forEach(async (message: any) => {
 			messaged = message;
 			id = message["id"] || "";
@@ -54,41 +54,46 @@ export async function fetch_attachments_from_message(
 				return new Promise((resolve) => setTimeout(resolve, ms));
 			}
 
-			await JSON.parse(JSON.stringify(await names).toString()).forEach(
-				async (data: any, index: number) => {
-                    async function bruh() {
-                        const response = await fetch(await data.url, {
-                            method: "GET",
-                            headers: {
-                                authorization: authorization_token,
-                            },
-                        });
-    
-                        //console.log(data.url);
-    
-                        const arrayBuffer = await response.arrayBuffer();
-                        const buffer = Buffer.from(arrayBuffer);
-                        await write_file(
-                            path.join(
-                                process.cwd() + "/data/channels/",
-                                await sanitize(parent_name),
-                                "/",
-                                await sanitize(await data.channel["name"]),
-                                "/",
-                                await sanitize(await data.channel["id"]),
-                                "/",
-                                "attachments",
-                                "/",
-                                await sanitize(data.id),
-                                "/",
-                                await sanitize(data.name),
-                            ),
-                            buffer,
-                        );
-                    }
+			async function bruh(data: any) {
+				const response = await fetch(await data.url, {
+					method: "GET",
+					headers: {
+						authorization: authorization_token,
+					},
+				});
 
-					await sleep(250 * (index + 1));
-                    await bruh()
+				const arrayBuffer = await response.arrayBuffer();
+				const buffer = Buffer.from(arrayBuffer);
+				await write_file(
+					path.join(
+						process.cwd() + "/data/channels/",
+						await sanitize(parent_name),
+						"/",
+						await sanitize(await data.channel["name"]),
+						"/",
+						await sanitize(await data.channel["id"]),
+						"/",
+						"attachments",
+						"/",
+						await sanitize(data.id),
+						"/",
+						await sanitize(data.name),
+					),
+					buffer,
+				);
+			}   
+
+			await JSON.parse(JSON.stringify(names).toString()).forEach(
+				async function (data: any, index: number) {
+					//await sleep(1000 * (index + 1));
+                    
+                    done.push(await data.id)
+                    console.log(done)
+					if (!(done.indexOf(await data.url) > -1)) {
+						await sleep(1000 * (index + 1));
+						console.log("a");
+						await bruh(await data);
+					}
 				},
 			);
 		}),
