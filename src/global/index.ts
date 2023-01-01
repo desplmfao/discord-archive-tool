@@ -7,7 +7,7 @@ export { sanitize }
 export { write_file }
 
 export const root = process.cwd() + "/data/channels/"
-export const api_endpoint = "https://discord.com/api/v9"
+export const api_endpoint = "https://discord.com/api/v10"
 
 export function sleep(ms: number | undefined | null) {
     return new Promise((resolve) => setTimeout(resolve, ms || 250));
