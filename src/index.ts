@@ -7,6 +7,8 @@ import { fetch_attachments_from_message } from "./modules/fetch_attachments_from
 export const authorization_token = process.env.AUTHORIZATION_TOKEN?.toString() || "";
 
 async function main(guild_id: number | string) {
+    let done: any[] = []
+    
 	const guild_channels = await fetch(
 		`https://discord.com/api/v9/guilds/${guild_id}/channels?channel_limit=500`,
 		{
@@ -20,7 +22,7 @@ async function main(guild_id: number | string) {
 	function sleep(ms: number | undefined) {
 		return new Promise((resolve) => setTimeout(resolve, ms));
 	}
-    let done: any[] = []
+
 	await JSON.parse(await guild_channels.text()).forEach(async function (
 		channel: string[],
 		index: number,
