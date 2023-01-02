@@ -11,8 +11,6 @@ export default async (
 	channel: string[],
 ) => {
 	messages.forEach(async (message: any, index: number) => {
-		await global.sleep(10000 * (index + 1));
-
 		let names: object[] = [];
 
 		const fetch_url = async (message_attachments_array: string[]) => {
