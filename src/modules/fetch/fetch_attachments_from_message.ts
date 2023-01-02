@@ -37,7 +37,7 @@ export default async (
 			return url
 		}
 		let url = await fetch_url(JSON.parse(JSON.stringify(message["attachments"]))[0])
-		
+
 		if (!url) {
 			return
 		}
@@ -78,7 +78,7 @@ export default async (
 				done.push(await data.id);
 				console.log(done);
 
-				if (!(done.indexOf(await url_test.url) > -1)) {
+				if (!(done.indexOf(await url_test) > -1)) {
 					const arrayBuffer = (await (await fetch(await url_test, {
 						method: "GET",
 						headers: {
