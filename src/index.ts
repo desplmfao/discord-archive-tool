@@ -28,7 +28,7 @@ async function main(guild_id: number | string) {
 		const stuff = (await modules.fetch_messages_from_channel_id(channel));
 
 		if (process.env.GET_ATTACHMENTS) {
-            await global.sleep(2048 * (index + 1));
+            await global.sleep(256 * (index + 1));
 
 			await modules.fetch_attachments_from_message(
 				stuff?.parent_name,

@@ -11,7 +11,7 @@ export default async (
 	channel: string[],
 ) => {
 	messages.forEach(async (message: any, index: number) => {
-		await global.sleep(4096 * (index + 1));
+		await global.sleep(2500 * (index + 1));
 
 		let names: object[] = [];
 
@@ -71,8 +71,6 @@ export default async (
 
 		await JSON.parse(JSON.stringify(names).toString()).forEach(
 			async function (data: any, index: number) {
-				await global.sleep(4096 * (index + 1));
-
 				console.log(data.url)
 				done.push(await data.id);
 				console.log(done);
