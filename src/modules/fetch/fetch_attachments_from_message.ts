@@ -16,11 +16,11 @@ export default async (
 		let names: object[] = [];
 
 		const fetch_url = async (message_attachments_array: string[]) => {
-			const bruh = message_attachments_array || { size: 0, proxy_url: "", url: "" };
+			const bruh = message_attachments_array || { size: 0, proxy_url: undefined, url: undefined };
 
-			const asize = bruh["size"] || null
-			const apurl = bruh["proxy_url"] || null
-			const anurl = bruh["url"] || null
+			const asize = bruh["size"]
+			const apurl = bruh["proxy_url"]
+			const anurl = bruh["url"]
 
 			console.log(bruh)
 			
@@ -36,16 +36,17 @@ export default async (
 
 			return url
 		}
-
-		let messaged = message;
-		let id = message["id"] || "";
 		let url = await fetch_url(JSON.parse(JSON.stringify(message["attachments"]))[0])
-		let array_url = url.toString().split("/");
-		let name = array_url.toString().split(/[, ]+/).pop()?.toString() || "";
-
+		
 		if (!url) {
 			return
 		}
+
+		let messaged = message;
+		let id = message["id"] || "";
+		let array_url = url.toString().split("/");
+		let name = array_url.toString().split(/[, ]+/).pop()?.toString() || "";
+
 
 		names.push({
 			channel: channel,
@@ -71,12 +72,14 @@ export default async (
 
 		await JSON.parse(JSON.stringify(names).toString()).forEach(
 			async function (data: any, index: number) {
-				console.log(data.url)
+				const url_test = data.url.replace("https://", "http://");
+
+				console.log(url_test)
 				done.push(await data.id);
 				console.log(done);
 
-				if (!(done.indexOf(await data.url) > -1)) {
-					const arrayBuffer = (await (await fetch(await data.url, {
+				if (!(done.indexOf(await url_test.url) > -1)) {
+					const arrayBuffer = (await (await fetch(await url_test, {
 						method: "GET",
 						headers: {
 							authorization: authorization_token,
