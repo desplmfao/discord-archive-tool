@@ -57,8 +57,6 @@ export default async (
 			name: name,
 		});
 
-		let done: string[] = [];
-
 		await checks.channel_name_and_id_message_attachment_id(
 			parent_name,
 			messaged,
@@ -75,34 +73,31 @@ export default async (
 				const url_test = data.url.replace("https://", "http://");
 
 				console.log(url_test)
-				done.push(await data.id);
-				console.log(done);
+				console.log(data);
 
-				if (!(done.indexOf(await url_test) > -1)) {
-					const arrayBuffer = (await (await fetch(await url_test, {
-						method: "GET",
-						headers: {
-							authorization: authorization_token,
-							"user-agent": user_agent
-						},
-					})).arrayBuffer());
-		
-					const buffer = Buffer.from(arrayBuffer);
-		
-					await global.write_file(
-						path.join(
-							global.root,
-							await global.sanitize(parent_name), "/",
-							await global.sanitize(await data.channel["name"]), "/",
-							await global.sanitize(await data.channel["id"]), "/",
-							"attachments", "/",
-							await global.sanitize(data.id), "/",
-							await global.sanitize(data.name),
-						),
-						buffer,
-					);
-				}
-			},
+				const arrayBuffer = (await (await fetch(await url_test, {
+					method: "GET",
+					headers: {
+						authorization: authorization_token,
+						"user-agent": user_agent
+					},
+				})).arrayBuffer());
+	
+				const buffer = Buffer.from(arrayBuffer);
+	
+				await global.write_file(
+					path.join(
+						global.root,
+						await global.sanitize(parent_name), "/",
+						await global.sanitize(await data.channel["name"]), "/",
+						await global.sanitize(await data.channel["id"]), "/",
+						"attachments", "/",
+						await global.sanitize(data.id), "/",
+						await global.sanitize(data.name),
+					),
+					buffer,
+				);
+			}
 		);
 	});
 
