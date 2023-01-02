@@ -11,6 +11,8 @@ export default async (
 	channel: string[],
 ) => {
 	messages.forEach(async (message: any, index: number) => {
+		await global.sleep(4096 * (index + 1));
+
 		let names: object[] = [];
 
 		const fetch_url = async (message_attachments_array: string[]) => {
@@ -69,6 +71,8 @@ export default async (
 
 		await JSON.parse(JSON.stringify(names).toString()).forEach(
 			async function (data: any, index: number) {
+				await global.sleep(4096 * (index + 1));
+
 				console.log(data.url)
 				done.push(await data.id);
 				console.log(done);
@@ -100,6 +104,7 @@ export default async (
 			},
 		);
 	});
+
 	await checks.channel_name_and_id_message_attachment(parent_name, {
 		root_id: await channel["id"],
 		root_name: await channel["name"],
