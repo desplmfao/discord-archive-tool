@@ -1,3 +1,6 @@
+import fs from "node:fs/promises"
+import path from "node:path"
+
 import "dotenv/config";
 
 import * as global from "./global/index"
@@ -6,8 +9,11 @@ import * as modules from "./modules/index"
 export const authorization_token = process.env.AUTHORIZATION_TOKEN?.toString() || "";
 export const user_agent = process.env.USER_AGENT?.toString() || "";
 
-
 async function main(guild_id: number | string) {
+	if(!await global.fileExists(path.join(global.root, "../"))) {
+        await fs.mkdir(path.join(global.root, "../"));
+    }
+
     const guild_channels = await fetch(
 		`${global.api_endpoint}/guilds/${guild_id}/channels?channel_limit=500`,
 		{
