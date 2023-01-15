@@ -31,7 +31,7 @@ export default async (
 			}
 
 			if (asize <= 8000000) {
-				url = apurl
+				url = anurl//apurl
 			}
 
 			return url
