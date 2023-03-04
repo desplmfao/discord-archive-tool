@@ -7,7 +7,7 @@
     "build": "tsc"
   },
   "devDependencies": {
-    "@types/node": "*,
+    "@types/node": "*",
     "ttypescript": "*"
   },
   "dependencies": {
